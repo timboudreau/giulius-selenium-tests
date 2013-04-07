@@ -1,4 +1,7 @@
 giulius-selenium-tests
 ======================
 
-A test harness that allows Selenium tests to be run using JUnit and test fixtures to be created and injected by a WebDriver-aware Guice
+An easy way to write Selenium tests in Java, have objects representing web page contents be created and injected by Guice + WebDriver, and use any JUnit reporting engine with Selenium
+
+Builds and a Maven repository containing this project can be <a href="https://timboudreau.com/builds/">found on timboudreau.com</a>.
+
