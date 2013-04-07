@@ -21,6 +21,8 @@ test methods can have method parameters, and the framework will pre-create
 objects that you want to test.  You write test code to test what
 matters, and the framework does the rest.
 
+To see what these tests look like, check out [this test](blob/master/selenium/src/test/java/com/mastfrog/selenium/TestSeleniumTest.java) which is part of the test-suite for this project.
+
 Here's a test which tests a fake search page.  That page contains
 a form with a text field with the ID ``searchField``, a submit button with the ID
 ``searchSubmit`` and a span with the ID ``prev`` which contains the previously
@@ -28,9 +30,9 @@ submitted form.  This test uses a _test fixture_ - a class called
 ``MyPageModel`` which contains fields representing each of those HTML
 elements.
 
-The very nice thing about this is that we never have to write code to create
-any of the objects in question - the framework creates them for us and we
-just use them.  
+The nice thing about this is that you never have to write code to create
+any of the objects in question - the framework creates them for you.  So
+writing tests remains focused on writing code that actually tests something:  
 
     @Test
     @Fixtures( LoginFixture.class ) // do the login steps ahead of time
