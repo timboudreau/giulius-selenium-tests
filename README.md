@@ -21,7 +21,7 @@ test methods can have method parameters, and the framework will pre-create
 objects that you want to test.  You write test code to test what
 matters, and the framework does the rest.
 
-To see what these tests look like, check out [this test](blob/master/selenium/src/test/java/com/mastfrog/selenium/TestSeleniumTest.java) which is part of the test-suite for this project.
+To see what these tests look like, check out [this test](https://github.com/timboudreau/giulius-selenium-tests/blob/master/selenium/src/test/java/com/mastfrog/selenium/TestSeleniumTest.java) which is part of the test-suite for this project.
 
 Here's a test which tests a fake search page.  That page contains
 a form with a text field with the ID ``searchField``, a submit button with the ID
