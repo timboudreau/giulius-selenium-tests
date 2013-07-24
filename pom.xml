@@ -8,6 +8,7 @@
         <groupId>com.mastfrog</groupId>
         <artifactId>mastfrog-parent</artifactId>
         <version>1.3.6-SNAPSHOT</version>
+        <relativePath/>
     </parent>
     <name>Giulius Selenium Parent</name>
     <description>Guice-enhanced Selenium tests via JUnit</description>
