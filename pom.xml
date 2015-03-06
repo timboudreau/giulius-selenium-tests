@@ -14,5 +14,7 @@
     <modules>
         <module>selenium</module>
         <module>video</module>
+        <module>test-main</module>
+        <module>groovy-selenium-guice-demo</module>
     </modules>
 </project>

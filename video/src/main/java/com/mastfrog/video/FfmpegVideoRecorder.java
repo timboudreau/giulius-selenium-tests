@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2012 Tim Boudreau.
@@ -86,6 +86,8 @@ final class FfmpegVideoRecorder implements VideoRecorder, Runnable {
             filename += '_' + dateString() + ".mp4";
         }
         int threads = settings.getInt("video.threads", 2);
+
+        System.setProperty("video.file", filename);
 
         String cmdline = "ffmpeg -y -v 1 -r 15 -f x11grab -s 1280x1024 -i "
                 + display + " -vcodec libx264 -threads " + threads + " -q:v 2 -r 30 " + filename;

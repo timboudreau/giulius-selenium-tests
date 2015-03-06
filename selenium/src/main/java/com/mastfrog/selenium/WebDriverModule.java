@@ -88,15 +88,17 @@ final class WebDriverModule extends AbstractModule {
             if (driver == null) {
                 // Make the appropriate web driver
                 WebDriver result;
-                if (settings.getString("browser").equalsIgnoreCase("iexplore")
-                        || settings.getString("browser").equalsIgnoreCase("ie")
-                        || settings.getString("browser").equalsIgnoreCase("internet explorer")
-                        || settings.getString("browser").equalsIgnoreCase("iexplorer")
-                        || settings.getString("browser").equalsIgnoreCase("explorer")) {
+                String browser = settings.getString("browser", "");
+                
+                if (browser.equalsIgnoreCase("iexplore")
+                        || browser.equalsIgnoreCase("ie")
+                        || browser.equalsIgnoreCase("internet explorer")
+                        || browser.equalsIgnoreCase("iexplorer")
+                        || browser.equalsIgnoreCase("explorer")) {
                     result = new InternetExplorerDriver();
-                } else if (settings.getString("browser").equalsIgnoreCase("firefox")) {
+                } else if (browser.equalsIgnoreCase("firefox")) {
                     result = new FirefoxDriver();
-                } else if (settings.getString("browser").equalsIgnoreCase("chrome")) {
+                } else if (browser.equalsIgnoreCase("chrome")) {
                     result = new ChromeDriver();
                 } else {
                     result = new HtmlUnitDriver();
