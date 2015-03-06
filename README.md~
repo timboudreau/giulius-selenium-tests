@@ -74,15 +74,3 @@ will construct an instance of ``LoginFixture``.  As a side-effect of constructin
 it, it logs into the web page, so that the page is ready to do the things
 we want to test.
 
-
-Groovy
-------
-
-The `groovy-selenium-guice-demo` shows an example of writing Selenium tests injected by Guice
-in Groovy and run in JUnit, and recording a screen-capture video while doing so (requires
-`ffmpeg`).
-
-The `test-main` project provides a simplified JUnit runner suitable for running tests
-as a standalone process (Selenium tests are not usually part of a unit test suite).
-
-
