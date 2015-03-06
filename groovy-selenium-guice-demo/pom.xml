@@ -125,29 +125,24 @@
         <dependency>
             <groupId>com.mastfrog</groupId>
             <artifactId>giulius-tests</artifactId>
-            <version>${mastfrog.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mastfrog</groupId>
             <artifactId>test-main</artifactId>
-            <version>${mastfrog.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mastfrog</groupId>
             <artifactId>selenium</artifactId>
-            <version>${mastfrog.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.mastfrog</groupId>
             <artifactId>acteur</artifactId>
-            <version>${mastfrog.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.mastfrog</groupId>
             <artifactId>video</artifactId>
-            <version>${mastfrog.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -157,25 +152,21 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.4.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-chrome-driver</artifactId>
-            <version>2.45.0</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-firefox-driver</artifactId>
-            <version>2.45.0</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-support</artifactId>
-            <version>2.45.0</version>
             <type>jar</type>
         </dependency>
     </dependencies>
