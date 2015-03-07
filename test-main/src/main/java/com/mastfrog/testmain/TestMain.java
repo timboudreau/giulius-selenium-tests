@@ -174,7 +174,7 @@ public class TestMain {
             }
             // We will scan packaages for classes whose name ends with "Test"
             String pkgs = settings.getString("packages");
-            Set<String> packages = pkgs == null ? Collections.emptySet() : new HashSet<String>(Arrays.asList(pkgs.split(",")));
+            Set<String> packages = pkgs == null ? Collections.<String>emptySet() : new HashSet<String>(Arrays.asList(pkgs.split(",")));
             ClassPath pth = ClassPath.from(TestMain.class.getClassLoader());
             Set<Class<?>> types = new LinkedHashSet<>();
             NEXT_TYPE:
