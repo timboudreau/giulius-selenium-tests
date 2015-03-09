@@ -106,11 +106,9 @@ public class TestMain {
         for (String key : settings.allKeys()) {
             System.setProperty(key, settings.getString(key));
         }
-        // So selenium tests that should record a video and publish it on failure
-        // know to turn on video recording
-        System.setProperty("record.video", "true");
+        String testNamespace = System.getProperty("test.config", "tests");
 
-        Class<?>[] tests = findTests(args);
+        Class<?>[] tests = findTests(testNamespace, args);
         JUnitCore core = new JUnitCore();
 
         core.addListener(new CmdLineOut());
@@ -131,9 +129,9 @@ public class TestMain {
         }
     }
 
-    private static Class<?>[] findTests(String... args) throws IOException, ClassNotFoundException {
+    private static Class<?>[] findTests(String testNamespace, String... args) throws IOException, ClassNotFoundException {
         // Parse the command-line arguments and any system settings in /etc/tests.properties
-        Settings settings = new SettingsBuilder("tests")
+        Settings settings = new SettingsBuilder(testNamespace)
                 .addDefaultLocations()
                 .parseCommandLineArguments(args).build();
         // Determine if we should show a window with the test name, for video recording

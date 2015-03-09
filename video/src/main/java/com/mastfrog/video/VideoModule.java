@@ -24,6 +24,9 @@
 package com.mastfrog.video;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import com.mastfrog.giulius.Dependencies;
 import com.mastfrog.guicy.annotations.Namespace;
 import com.mastfrog.settings.Settings;
@@ -42,10 +45,11 @@ public class VideoModule extends AbstractModule {
         // XXX bind something different on Windows?
         bind(VideoRecorder.class).to(FfmpegVideoRecorder.class).asEagerSingleton();
     }
-
+    
     public static void main(String[] args) throws IOException, InterruptedException {
-        Settings settings = new SettingsBuilder("video").
-                addDefaultLocations()
+        Settings settings = new SettingsBuilder("video")
+                .add("record.video", "true")
+                .addDefaultLocations()
                 .parseCommandLineArguments(args).build();
         Dependencies deps = Dependencies.builder()
                 .add(settings, Namespace.DEFAULT)
