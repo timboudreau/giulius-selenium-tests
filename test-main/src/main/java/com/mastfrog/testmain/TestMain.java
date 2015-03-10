@@ -135,7 +135,7 @@ public class TestMain {
                 .addDefaultLocations()
                 .parseCommandLineArguments(args).build();
         // Determine if we should show a window with the test name, for video recording
-        showWindow = settings.getBoolean("test.window", true);
+        showWindow = settings.getBoolean("test.window", true) && !Boolean.getBoolean("java.awt.headless");
         // User provided individual test classes, e.g. --tests com.foo.Test1,com.foo.Test2
         String individualTests = settings.getString("test");
         if (individualTests != null) {
@@ -271,8 +271,14 @@ public class TestMain {
         }
 
         @Override
+        public void testAssumptionFailure(Failure failure) {
+            System.out.println("::FAIL: " + testName(failure.getDescription()));
+            failure.getException().printStackTrace(System.out);
+        }
+
+        @Override
         public void testFinished(Description description) throws Exception {
-            System.out.println("::SUCCESS: " + testName(description));
+            System.out.println("::FINISHED: " + testName(description));
         }
 
         @Override

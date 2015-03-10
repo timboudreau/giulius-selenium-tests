@@ -26,6 +26,7 @@ package com.mastfrog.video;
 import com.google.inject.Inject;
 import com.mastfrog.giulius.ShutdownHookRegistry;
 import com.mastfrog.settings.Settings;
+import static com.mastfrog.video.VideoModule.log;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
@@ -52,7 +53,7 @@ final class FfmpegVideoRecorder implements VideoRecorder, Runnable {
         if (settings.getBoolean("record.video", false)) {
             start();
         } else {
-            System.out.println("System property record.video is not set to true "
+            log("System property record.video is not set to true "
                     + "- will not record video");
         }
     }
@@ -70,7 +71,7 @@ final class FfmpegVideoRecorder implements VideoRecorder, Runnable {
             Logger.getLogger(FfmpegVideoRecorder.class.getName()).log(Level.SEVERE, null, new Error("ENV DISPLAY VARIABLE NOT SET"));
             return;
         }
-        System.out.println("Starting ffmpeg");
+        log("Starting ffmpeg");
 
         String filename = settings.getString("video");
         if (filename == null) {
@@ -91,8 +92,8 @@ final class FfmpegVideoRecorder implements VideoRecorder, Runnable {
 
         String cmdline = "ffmpeg -y -v 1 -r 15 -f x11grab -s 1280x1024 -i "
                 + display + " -vcodec libx264 -threads " + threads + " -q:v 2 -r 30 " + filename;
-        System.out.println("Will run ffmpeg with command-line: '" + cmdline + "'");
-        System.out.println("Recording video to " + filename);
+        log("Will run ffmpeg with command-line: '" + cmdline + "'");
+        log("Recording video to " + filename);
         String urlBase = settings.getString("base.video.url");
         if (urlBase != null) {
             if (!urlBase.endsWith("/")) {
@@ -102,7 +103,7 @@ final class FfmpegVideoRecorder implements VideoRecorder, Runnable {
 
             String build = settings.getString("BUILD_NUMBER", "lastSuccessfulBuild");
             urlBase = urlBase.replace("_BUILD_", build);
-            System.out.println("Video available from " + urlBase);
+            log("Video available from " + urlBase);
         }
 
         ProcessBuilder pb = new ProcessBuilder().inheritIO().command(cmdline.split("\\s"));
@@ -112,7 +113,7 @@ final class FfmpegVideoRecorder implements VideoRecorder, Runnable {
             synchronized (this) {
                 process = pb.start();
             }
-            System.out.println("Started ffmpeg");
+            log("Started ffmpeg");
         } catch (IOException ex) {
             Logger.getLogger(FfmpegVideoRecorder.class.getName()).log(Level.SEVERE, null, ex);
         }

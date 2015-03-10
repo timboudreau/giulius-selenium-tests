@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2013 Tim Boudreau.
@@ -104,6 +104,11 @@ public final class SeleniumRunner extends GuiceRunner {
         super(testClass);
     }
 
+    private static void log(CharSequence what) {
+        if (Boolean.getBoolean("giulius.tests.verbose")) {
+            System.err.println(what);
+        }
+    }
     /**
      * Called just before the test is run, and just before we will create the
      * injector. We override this to introspect and find classes which we should
@@ -129,7 +134,7 @@ public final class SeleniumRunner extends GuiceRunner {
                     if (hasSeleniumAnnotations(type)) {
                         createWithSelenium(type);
                     }
-                    // Allow one level below injected types to be handled by selenium - 
+                    // Allow one level below injected types to be handled by selenium -
                     // if an object is being injected into a field, make sure we
                     // don't need selenium to create the object
                     for (Field field : type.getDeclaredFields()) {
@@ -172,7 +177,7 @@ public final class SeleniumRunner extends GuiceRunner {
                     public URL get() {
                         try {
                             String base = getBaseUrl();
-                            System.out.println("Base URL for tests: " + base);
+                            log("Base URL for tests: " + base);
                             return base == null ? null : new URL(base);
                         } catch (MalformedURLException ex) {
                             return Exceptions.chuck(ex);
@@ -228,12 +233,12 @@ public final class SeleniumRunner extends GuiceRunner {
                 seen.add(type);
                 final Provider<WebDriver> driverProvider = binder().getProvider(WebDriver.class);
                 final Provider<Dependencies> injector = binder().getProvider(Dependencies.class);
-                System.out.println("Construct using Selenium's PageFactory: " + type.getName());
+                log("Construct using Selenium's PageFactory: " + type.getName());
                 class P implements Provider<T> {
 
                     @Override
                     public T get() {
-                        System.out.println("Constructing instance of " + type.getName());
+                        log("Constructing instance of " + type.getName());
                         // Hmm, should we reverse it and let Guice instantiate it?
                         T result = PageFactory.initElements(driverProvider.get(), type);
                         // Allow Guice injection into these as well

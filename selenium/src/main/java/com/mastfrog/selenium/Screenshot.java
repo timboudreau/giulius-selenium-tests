@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2013 Tim Boudreau.
@@ -38,6 +38,7 @@ import javax.imageio.ImageIO;
  * @author Tim Boudreau
  */
 public final class Screenshot {
+
     private final BufferedImage capture;
 
     public Screenshot() throws AWTException {
@@ -45,10 +46,16 @@ public final class Screenshot {
         BufferedImage capture = new Robot().createScreenCapture(screenRect);
         this.capture = capture;
     }
-    
+
+    private static void log(CharSequence what) {
+        if (Boolean.getBoolean("giulius.tests.verbose")) {
+            System.err.println(what);
+        }
+    }
+
     public void save(File f) throws IOException {
         ImageIO.write(capture, "png", f);
-        System.out.println("Saved screenshot to " 
+        log("Saved screenshot to "
                 + f.getAbsoluteFile().getCanonicalPath());
     }
 }
