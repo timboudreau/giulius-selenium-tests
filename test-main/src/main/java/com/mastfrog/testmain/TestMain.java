@@ -26,6 +26,7 @@ package com.mastfrog.testmain;
 import com.google.common.reflect.ClassPath;
 import com.mastfrog.settings.Settings;
 import com.mastfrog.settings.SettingsBuilder;
+import com.mastfrog.testmain.suites.SuiteLists;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -40,6 +41,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,20 +58,22 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 
 /**
- * A simple runner for projects which <i>are</i> a set of JUnit tests,
- * with support for showing a window with the name of the current test,
- * for use when capturing video from Selenium.
+ * A simple runner for projects which <i>are</i> a set of JUnit tests, with
+ * support for showing a window with the name of the current test, for use when
+ * capturing video from Selenium.
  * <p>
  * The following command-line arguments are relevant:
  * <ul>
- * <li>--tests [list of class names, comma sep] - explicitly run certain tests</li>
- * <li>--packages [list of packages, comma sep] - list of packages to scan for classes
+ * <li>--tests [list of class names, comma sep] - explicitly run certain
+ * tests</li>
+ * <li>--packages [list of packages, comma sep] - list of packages to scan for
+ * classes
  * </li>
  * <li>--exclude [list of packages] - packages to exclude from scanning</li>
  * </ul>
  * The default behavior with no arguments is to scan the entire classpath for
  * classes whose name ends in Test where at least one method has the &#064Test
- * annotation.  This works, but is slower than explicitly specifying classes.
+ * annotation. This works, but is slower than explicitly specifying classes.
  * <p>
  * A process exit code of 2 means tests failed.
  * <p>
@@ -134,6 +139,36 @@ public class TestMain {
         Settings settings = new SettingsBuilder(testNamespace)
                 .addDefaultLocations()
                 .parseCommandLineArguments(args).build();
+
+        String suites = settings.getString("suites");
+        if (suites != null) {
+            String tests = settings.getString("test");
+            if (tests != null) {
+                throw new IOException("Cannot specify both --test and --suites");
+            }
+            SuiteLists known = new SuiteLists();
+            List<String> types = new LinkedList<>();
+            for (String suite : suites.split(",")) {
+                List<String> found = known.typeNames(suite);
+                if (found.isEmpty()) {
+                    throw new IOException("No known suite named " + suite);
+                }
+                types.addAll(found);
+            }
+            if (types.isEmpty()) {
+                throw new IOException("No tests to run from " + suites);
+            }
+            StringBuilder sb = new StringBuilder();
+            for (Iterator<String> it = types.iterator(); it.hasNext();) {
+                sb.append(it.next());
+                if (it.hasNext()) {
+                    sb.append(",");
+                }
+            }
+            settings = new SettingsBuilder().add(settings)
+                    .add("test", sb.toString()).build();
+        }
+
         // Determine if we should show a window with the test name, for video recording
         showWindow = settings.getBoolean("test.window", true) && !Boolean.getBoolean("java.awt.headless");
         // User provided individual test classes, e.g. --tests com.foo.Test1,com.foo.Test2
