@@ -57,15 +57,18 @@ final class WebDriverModule extends AbstractModule {
     private static class WaitProvider implements Provider<WebDriverWait> {
 
         private final Provider<WebDriver> driver;
+        private final int waitDurationSeconds;
+        public static final int MULTIPLIER = 10;
 
         @Inject
-        WaitProvider(Provider<WebDriver> driver) {
+        WaitProvider(Provider<WebDriver> driver, Settings settings) {
             this.driver = driver;
+            waitDurationSeconds = (settings.getInt("sleep", 1000) * MULTIPLIER) / 1000;
         }
 
         @Override
         public WebDriverWait get() {
-            return new WebDriverWait(driver.get(), 15);
+            return new WebDriverWait(driver.get(), waitDurationSeconds);
         }
     }
 
