@@ -205,7 +205,7 @@ public class TestMain {
                     excluded.add(pkg);
                 }
             }
-            // We will scan packaages for classes whose name ends with "Test"
+            // We will scan packages for classes whose name ends with "Test"
             String pkgs = settings.getString("packages");
             Set<String> packages = pkgs == null ? Collections.<String>emptySet() : new HashSet<String>(Arrays.asList(pkgs.split(",")));
             ClassPath pth = ClassPath.from(TestMain.class.getClassLoader());
