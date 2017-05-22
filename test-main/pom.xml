@@ -10,7 +10,7 @@
     <artifactId>test-main</artifactId>
     <dependencies>
         <dependency>
-            <groupId>com.mastfrog</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>giulius-settings</artifactId>
         </dependency>
         <dependency>
@@ -26,7 +26,7 @@
             <artifactId>org-openide-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.mastfrog</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>giulius</artifactId>
         </dependency>
     </dependencies>
