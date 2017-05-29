@@ -25,7 +25,7 @@ package com.mastfrog.video;
 
 import com.google.inject.AbstractModule;
 import com.mastfrog.giulius.Dependencies;
-import com.mastfrog.guicy.annotations.Namespace;
+import com.mastfrog.giulius.annotations.Namespace;
 import com.mastfrog.settings.Settings;
 import com.mastfrog.settings.SettingsBuilder;
 import java.io.IOException;

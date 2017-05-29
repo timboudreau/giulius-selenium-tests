@@ -1,6 +1,6 @@
 package com.mastfrog.groovytests;
 
-import com.mastfrog.guicy.annotations.Defaults;
+import com.mastfrog.giulius.annotations.Defaults;
 import com.mastfrog.testmain.TestMain;
 import java.io.IOException;
 
