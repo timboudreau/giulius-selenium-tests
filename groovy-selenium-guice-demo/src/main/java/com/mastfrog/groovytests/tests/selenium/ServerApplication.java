@@ -56,7 +56,7 @@ public class ServerApplication extends AbstractModule {
         IndexActeur(HttpEvent evt) {
             StringBuilder sb = new StringBuilder();
             sb.append("<html><head><title>Unit Test</title></head><body><h1>Search</h1>Search for stuff<p/>");
-            String q = evt.getParameter("searchText");
+            String q = evt.urlParameter("searchText");
             sb.append("Previous search was: <span id=\"prev\">").append(q).append("</span><p/>\n");
             sb.append("<form name=\"search\" method=\"get\" action=\"/\">\n");
             sb.append("<input id=\"searchField\" type=\"text\" name=\"searchText\"></input>\n");
