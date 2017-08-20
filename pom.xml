@@ -15,7 +15,11 @@
         <module>selenium</module>
         <module>video</module>
         <module>test-main</module>
+
+<!-- comment this out due to JDK 8 javac bug -->
+<!--
         <module>groovy-selenium-guice-demo</module>
+-->
     </modules>
     <url>https://github.com/timboudreau/giulius-selenium-tests</url>
     <scm>
