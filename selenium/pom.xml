@@ -8,9 +8,6 @@
     </parent>
     <artifactId>selenium</artifactId>
     <name>Selenium - Guice - JUnit</name>
-    <properties>
-        <enforcer.skip>true</enforcer.skip>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.netbeans.api</groupId>
@@ -31,6 +28,16 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>htmlunit-driver</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.seleniumhq.selenium</groupId>
+                    <artifactId>selenium-api</artifactId>
+                </exclusion>
+            </exclusions>            
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
