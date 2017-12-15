@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013 Tim Boudreau.
+ * Copyright 2017 Tim Boudreau.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,41 +23,27 @@
  */
 package com.mastfrog.selenium;
 
-import static com.mastfrog.util.Checks.notNull;
-import java.awt.AWTException;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import org.openqa.selenium.support.FindBy;
 
 /**
- * Takes a screenshot of the desktop, whatever that means
  *
  * @author Tim Boudreau
  */
-public final class Screenshot {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface ScreenCapture {
 
-    private final BufferedImage capture;
+    String value() default "";
 
-    public Screenshot() throws AWTException {
-        Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-        BufferedImage capture = new Robot().createScreenCapture(screenRect);
-        this.capture = capture;
-    }
+    FindBy of() default @FindBy(tagName = "body");
 
-    private static void log(CharSequence what) {
-        if (Boolean.getBoolean("giulius.tests.verbose")) {
-            System.err.println(what);
-        }
-    }
+    double maxDeviation() default 0.2f;
 
-    public void save(File f) throws IOException {
-        notNull("capture", capture);
-        ImageIO.write(capture, "png", notNull("file", f));
-        log("Saved screenshot to "
-                + f.getAbsoluteFile().getCanonicalPath());
-    }
+    FindBy waitForVisible() default @FindBy(tagName = "body");
+
+    long delayMilliseconds() default 0;
 }

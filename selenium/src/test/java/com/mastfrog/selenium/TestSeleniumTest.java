@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  *
  * @author Tim Boudreau
  */
+@TakeScreenshotOnFailure
 @RunWith(SeleniumRunner.class)
 @Defaults({"browser=htmlunit", "_baseUrl=http://localhost:9223", "webdriver.maximize=false"})
 @TestWith(TestServletModule.class)
@@ -42,6 +43,7 @@ public class TestSeleniumTest {
     // Two things which should get created in the right order but not
     // actually passed in to anything - something like a login page
 
+    @ScreenCapture("woohoo")
     static class FixtureOne {
 
         FixtureOne() {
@@ -51,6 +53,7 @@ public class TestSeleniumTest {
         }
     }
 
+    @ScreenCapture("woohoo")
     static class FixtureTwo {
 
         @Inject

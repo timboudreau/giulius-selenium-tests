@@ -26,13 +26,12 @@ package com.mastfrog.video;
 import com.google.inject.Inject;
 import com.mastfrog.giulius.ShutdownHookRegistry;
 import com.mastfrog.settings.Settings;
+import com.mastfrog.util.time.TimeUtil;
 import static com.mastfrog.video.VideoModule.log;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,9 +58,7 @@ final class FfmpegVideoRecorder implements VideoRecorder, Runnable {
     }
 
     private String dateString() {
-        Date date = new Date();
-        DateFormat df = new SimpleDateFormat("Y-M-d_h-ma");
-        return df.format(date);
+        return TimeUtil.toSortableStringFormat(ZonedDateTime.now());
     }
 
     @Override

@@ -59,6 +59,11 @@
             <artifactId>embedded-jetty</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.assertthat</groupId>
+            <artifactId>selenium-shutterbug</artifactId>
+            <version>0.6.1</version>
+        </dependency>        
     </dependencies>
     <build>
         <plugins>

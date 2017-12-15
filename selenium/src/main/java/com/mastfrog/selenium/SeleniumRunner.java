@@ -23,6 +23,8 @@
  */
 package com.mastfrog.selenium;
 
+import com.assertthat.selenium_shutterbug.core.Shutterbug;
+import com.assertthat.selenium_shutterbug.core.Snapshot;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Key;
@@ -33,18 +35,32 @@ import com.mastfrog.giulius.DependenciesBuilder;
 import com.mastfrog.giulius.tests.GuiceRunner;
 import com.mastfrog.settings.Settings;
 import com.mastfrog.util.Exceptions;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
+import javax.imageio.ImageIO;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
+import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.FindBy.FindByBuilder;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * A minor extension to the Mastfrog guice test framework to make it possible to
@@ -85,10 +101,9 @@ import org.openqa.selenium.support.PageFactory;
  * test multiple times with different configurations. This could be used to test
  * in multiple browsers.
  * <p/>
- * Settings can be specified by the usual
- * <code>/etc/defaults.properties</code>,
- * <code>~/defaults.properties</code> and
- * <code>./defaults.properties</code> files,
+ * Settings can be specified by the usual <code>/etc/defaults.properties</code>,
+ * <code>~/defaults.properties</code> and <code>./defaults.properties</code>
+ * files,
  * <i>and</i> also can be overridden in a properties file in the same Java
  * package with the same name as the test.
  *
@@ -109,6 +124,57 @@ public final class SeleniumRunner extends GuiceRunner {
             System.err.println(what);
         }
     }
+
+    private File screenshotDestFolder() {
+        return screenshotsFolder("screenshots.dir");
+    }
+
+    private File screenshotsFolder(String key) {
+        String dirName = System.getProperty(key);
+        if (dirName == null) {
+            dirName = "target/surefire-reports";
+        }
+        File dir = new File(dirName);
+        if (!dir.exists()) {
+            dir = new File("surefire-reports");
+            if (!dir.exists()) {
+                dir = null;
+            }
+        }
+        if (dir == null) {
+            dir = new File(".");
+        }
+        return dir;
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+        if (super.getTestClass().getJavaClass().getAnnotation(TakeScreenshotOnFailure.class) != null) {
+            notifier.addFirstListener(new RunListener() {
+                @Override
+                public void testFailure(Failure failure) throws Exception {
+                    Screenshot screenshot = new Screenshot();
+                    File dir = screenshotDestFolder();
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    int ix = failure.getDescription().getClassName().lastIndexOf('.');
+                    System.out.println("DESC: " + failure.getDescription().getClassName() + " method " + failure.getDescription().getMethodName());
+
+                    String filename = "FAILED-" + failure.getDescription().getClassName().substring(ix + 1)
+                            + "-" + failure.getDescription().getMethodName()
+                            // + "-" + TimeUtil.toSortableStringFormat(ZonedDateTime.now())
+                            + ".png";
+                    File f = new File(dir, filename);
+                    screenshot.save(f);
+                    System.out.println("::FAILURE_SCREENSHOT:" + f.getAbsolutePath());
+                    super.testFailure(failure);
+                }
+            });
+        }
+        super.run(notifier);
+    }
+
     /**
      * Called just before the test is run, and just before we will create the
      * injector. We override this to introspect and find classes which we should
@@ -282,18 +348,111 @@ public final class SeleniumRunner extends GuiceRunner {
 
     @Override
     protected void onAfterCreateDependencies(TestClass testClass, FrameworkMethod method, Settings settings, Dependencies dependencies) {
+        boolean screenshots = settings.getBoolean("selenium.fixture.screenshots", true);
         // Pre-run any constructors that might do things like get through a
         // login procedure
         Fixtures fixtures = testClass.getJavaClass().getAnnotation(Fixtures.class);
         if (fixtures != null) {
             for (Class<?> type : fixtures.value()) {
-                dependencies.getInstance(type);
+                createFixture(testClass, method, type, dependencies, screenshots, settings);
             }
         }
         fixtures = method.getAnnotation(Fixtures.class);
         if (fixtures != null) {
             for (Class<?> type : fixtures.value()) {
-                dependencies.getInstance(type);
+                createFixture(testClass, method, type, dependencies, screenshots, settings);
+            }
+        }
+    }
+
+    private <T> T createFixture(TestClass tc, FrameworkMethod method, Class<T> type, Dependencies injector, boolean screenshotsEnabled, Settings settings) {
+        boolean takeScreenshot = screenshotsEnabled;
+        ScreenCapture cap = null;
+        if (takeScreenshot) {
+            cap = type.getAnnotation(ScreenCapture.class);
+        }
+        T result = injector.getInstance(type);
+        if (cap != null) {
+            try {
+                takePostFixtureCreationScreenshotAndCompare(injector, result, settings, type, cap, tc, method);
+            } catch (Exception e) {
+                System.err.println("Exception thrown capturing screen shot - continuing test");
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    protected <T> void takePostFixtureCreationScreenshotAndCompare(Dependencies injector, T result, Settings settings, Class<T> type, ScreenCapture cap, TestClass tc, FrameworkMethod method) throws AssertionError, IOException, InterruptedException {
+        WebDriver driver = injector.getInstance(WebDriver.class);
+        if (driver instanceof HtmlUnitDriver) {
+            return;
+        }
+        boolean useTimestampedFilenames = settings.getBoolean("selenium.use.timestampd.filenames", false);
+        boolean failOnImageDivergence = settings.getBoolean("selenium.fail.on.screenshot.divergence", false);
+        String filename = type.getSimpleName();
+        if (!cap.value().isEmpty()) {
+            filename = cap.value() + "-" + filename;
+        }
+        filename = tc.getJavaClass().getSimpleName() + "-" + method.getName() + "-" + filename;
+        System.err.println("Will take screenshot " + filename);
+        String fnbase = filename;
+        if (!useTimestampedFilenames) {
+            filename = filename + ".png";
+        }
+        File fld = screenshotDestFolder();
+        if (!fld.exists()) {
+            System.err.println("Creating screenshots dest " + fld.getAbsolutePath());
+            fld.mkdirs();
+        }
+        if (cap.delayMilliseconds() > 0) {
+            Thread.sleep(cap.delayMilliseconds());
+        }
+        if (!cap.waitForVisible().id().equals("body")) {
+            WebElement el = driver.findElement(new FindByBuilder().buildIt(cap.waitForVisible(), null));
+            WebDriverWait wait = new WebDriverWait(driver, 5, 10);
+            try {
+                wait.ignoring(TimeoutException.class).until(ExpectedConditions.visibilityOf(el));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        boolean wholePage = cap.of().id().equals("body");
+        Snapshot shot;
+        if (wholePage) {
+            shot = Shutterbug.shootPage(driver);
+        } else {
+            WebElement el = driver.findElement(new FindByBuilder().buildIt(cap.of(), null));
+            shot = Shutterbug.shootElement(driver, el);
+        }
+        String path = new File(fld, filename).getPath();
+        if (useTimestampedFilenames) {
+            shot.save(path);
+        } else {
+            ImageIO.write(shot.getImage(), "png", new File(path));
+        }
+        System.err.println("Saved screen shot for " + fnbase + " to " + path);
+        String masterFolder = settings.getString("screenshots.master", null);
+        if (masterFolder != null) {
+            File gdir = new File(masterFolder);
+            if (gdir.exists()) {
+                File orig = new File(gdir, filename);
+                if (orig.exists()) {
+                    BufferedImage origImage = ImageIO.read(orig);
+                    String diffPath = new File(fld, fnbase + "-diff.png").getPath();
+                    boolean equal = shot.equalsWithDiff(origImage, diffPath, cap.maxDeviation());
+                    if (!equal) {
+                        DecimalFormat df = new DecimalFormat("#000.00");
+                        double dev = cap.maxDeviation() * 100;
+                        String msg = "Screen shots diverged more than " + df.format(dev) + " after " + fnbase + ". "
+                                + "Diff image: " + diffPath;
+                        if (failOnImageDivergence) {
+                            throw new AssertionError(msg);
+                        } else {
+                            System.err.println(msg);
+                        }
+                    }
+                }
             }
         }
     }

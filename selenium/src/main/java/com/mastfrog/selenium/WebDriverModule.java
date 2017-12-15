@@ -24,24 +24,41 @@
 package com.mastfrog.selenium;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Binding;
 import com.google.inject.Inject;
+import com.google.inject.Key;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.google.inject.matcher.AbstractMatcher;
+import com.google.inject.matcher.Matcher;
 import com.google.inject.name.Named;
+import com.google.inject.name.Names;
+import com.google.inject.spi.ProvisionListener;
 import com.mastfrog.giulius.ShutdownHookRegistry;
 import com.mastfrog.settings.Settings;
+import static com.mastfrog.util.collections.CollectionUtils.setOf;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindAll;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.PageFactoryFinder;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * Instantiates the correct Selenium WebDriver.   Binds WebDriver
- * and WebDriverWait so they can be injected.
+ * Instantiates the correct Selenium WebDriver. Binds WebDriver and
+ * WebDriverWait so they can be injected.
  *
  * @author Tim Boudreau
  */
@@ -49,8 +66,50 @@ final class WebDriverModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(WebDriver.class).toProvider(DriverProvider.class);
+        final DriverProvider driverProvider = new DriverProvider(binder().getProvider(Settings.class),
+                binder().getProvider(ShutdownHookRegistry.class), binder().getProvider(Key.get(URL.class, Names.named("baseUrl"))));
+
+        bind(WebDriver.class).toProvider(driverProvider);
         bind(WebDriverWait.class).toProvider(WaitProvider.class);
+
+        final Set<Class<? extends Annotation>> seleniumAnnotationTypes
+                = setOf(FindBy.class, FindBys.class, CacheLookup.class, FindAll.class, PageFactoryFinder.class);
+
+        Matcher<Binding> typeHasSeleniumAnnotatedFields = new AbstractMatcher<Binding>() {
+            private final Set<Class<?>> hasSeleniumAnnotations = new HashSet<>();
+            private final Set<Class<?>> noSeleniumAnnotations = new HashSet<>();
+
+            @Override
+            public boolean matches(Binding t) {
+                Class<?> type = t.getKey().getTypeLiteral().getRawType();
+                if (hasSeleniumAnnotations.contains(type)) {
+                    return true;
+                } else if (noSeleniumAnnotations.contains(type)) {
+                    return false;
+                }
+                for (Field f : type.getDeclaredFields()) {
+                    for (Class<? extends Annotation> anno : seleniumAnnotationTypes) {
+                        if (f.getAnnotation(anno) != null) {
+                            hasSeleniumAnnotations.add(type);
+                            return true;
+                        }
+                    }
+                }
+                noSeleniumAnnotations.add(type);
+                return false;
+            }
+        };
+
+        binder().bindListener(typeHasSeleniumAnnotatedFields, new ProvisionListener() {
+            @Override
+            public <T> void onProvision(ProvisionListener.ProvisionInvocation<T> provision) {
+                Class<? super T> type = provision.getBinding().getKey().getTypeLiteral().getRawType();
+                T obj = provision.provision();
+                if (driverProvider.driver != null) {
+                    PageFactory.initElements(driverProvider.driver, obj);
+                }
+            }
+        });
     }
 
     @Singleton
@@ -75,13 +134,13 @@ final class WebDriverModule extends AbstractModule {
     @Singleton
     private static class DriverProvider implements Provider<WebDriver>, Runnable {
 
-        private WebDriver driver;
-        private final Settings settings;
+        WebDriver driver;
+        private final Provider<Settings> settings;
         private final Provider<ShutdownHookRegistry> hook;
         private final Provider<URL> baseURL;
 
         @Inject
-        public DriverProvider(Settings settings, Provider<ShutdownHookRegistry> hook, @Named("baseUrl") Provider<URL> baseURL) {
+        public DriverProvider(Provider<Settings> settings, Provider<ShutdownHookRegistry> hook, @Named("baseUrl") Provider<URL> baseURL) {
             this.settings = settings;
             this.hook = hook;
             this.baseURL = baseURL;
@@ -91,8 +150,9 @@ final class WebDriverModule extends AbstractModule {
             if (driver == null) {
                 // Make the appropriate web driver
                 WebDriver result;
+                Settings settings = this.settings.get();
                 String browser = settings.getString("browser", "");
-                
+
                 if (browser.equalsIgnoreCase("iexplore")
                         || browser.equalsIgnoreCase("ie")
                         || browser.equalsIgnoreCase("internet explorer")
