@@ -1,6 +1,7 @@
 package com.mastfrog.testmain.suites;
 
-import com.mastfrog.giulius.annotations.processors.IndexGeneratingProcessor;
+import com.mastfrog.util.service.IndexGeneratingProcessor;
+import com.mastfrog.util.service.ServiceProvider;
 import java.util.Collections;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -12,13 +13,12 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Tim Boudreau
  */
-@ServiceProvider(service = Processor.class)
+@ServiceProvider(Processor.class)
 @SupportedAnnotationTypes({"com.mastfrog.testmain.suites.Suites"})
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class SuitesProcessor extends IndexGeneratingProcessor {
