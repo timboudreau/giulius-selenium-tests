@@ -8,6 +8,9 @@
     </parent>
     <artifactId>selenium</artifactId>
     <name>Selenium - Guice - JUnit</name>
+    <properties>
+        <enforcer.skip>true</enforcer.skip>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
