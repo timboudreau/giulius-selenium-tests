@@ -4,11 +4,16 @@
     <parent>
         <groupId>com.mastfrog</groupId>
         <artifactId>mastfrog-parent</artifactId>
-        <version>2.4.1</version>
+        <version>2.5.0-dev</version>
         <relativePath/>
     </parent>
     <artifactId>test-main</artifactId>
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>annotation-processors</artifactId>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>giulius-settings</artifactId>
