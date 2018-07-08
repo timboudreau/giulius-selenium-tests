@@ -2,7 +2,6 @@ package com.mastfrog.testmain.suites;
 
 import com.mastfrog.util.service.AbstractSingleAnnotationLineOrientedRegistrationAnnotationProcessor;
 import com.mastfrog.util.service.ServiceProvider;
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -10,6 +9,7 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
@@ -26,7 +26,7 @@ public class SuitesProcessor extends AbstractSingleAnnotationLineOrientedRegistr
     private static final Pattern whitespace = Pattern.compile("\\s");
     private int ix;
 
-    SuitesProcessor() {
+    public SuitesProcessor() {
         super(Suites.class);
     }
 
@@ -36,7 +36,7 @@ public class SuitesProcessor extends AbstractSingleAnnotationLineOrientedRegistr
     }
 
     @Override
-    protected void doHandleOne(Element el, Annotation anno, int order) {
+    protected void handleOne(Element el, AnnotationMirror anno, int order) {
         TypeElement te = (TypeElement) el;
         Suites suites = te.getAnnotation(Suites.class);
         for (String suiteName : suites.value()) {
@@ -55,7 +55,7 @@ public class SuitesProcessor extends AbstractSingleAnnotationLineOrientedRegistr
     }
 
     @Override
-    protected int order(Annotation anno) {
+    protected int getOrder(AnnotationMirror anno) {
         return ix++;
     }
 }

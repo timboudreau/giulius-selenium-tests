@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.mastfrog</groupId>
-        <artifactId>giulius-selenium-parent</artifactId>
+        <artifactId>mastfrog-parent-indexed</artifactId>
         <version>2.5.0-dev</version>
     </parent>
     <artifactId>selenium</artifactId>
@@ -20,6 +20,16 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>giulius-tests</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>giulius-annotations</artifactId>
+            <scope>test</scope>
+        </dependency>        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>giulius-annotation-processors</artifactId>
+            <scope>test</scope>
+        </dependency>        
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>util</artifactId>
