@@ -25,8 +25,8 @@ package com.mastfrog.selenium;
 
 import com.google.inject.Inject;
 import com.mastfrog.giulius.Dependencies;
-import com.mastfrog.util.Checks;
-import com.mastfrog.util.Exceptions;
+import com.mastfrog.util.preconditions.Checks;
+import com.mastfrog.util.preconditions.Exceptions;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openqa.selenium.By;

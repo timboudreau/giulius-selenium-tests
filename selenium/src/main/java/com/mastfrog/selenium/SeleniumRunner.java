@@ -34,7 +34,7 @@ import com.mastfrog.giulius.Dependencies;
 import com.mastfrog.giulius.DependenciesBuilder;
 import com.mastfrog.giulius.tests.GuiceRunner;
 import com.mastfrog.settings.Settings;
-import com.mastfrog.util.Exceptions;
+import com.mastfrog.util.preconditions.Exceptions;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

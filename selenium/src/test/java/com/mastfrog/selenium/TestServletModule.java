@@ -5,7 +5,7 @@ import com.google.inject.Provider;
 import com.mastfrog.giulius.ShutdownHookRegistry;
 import com.mastfrog.grizzly.WebServer;
 import com.mastfrog.grizzly.WebServerBuilder;
-import com.mastfrog.util.Exceptions;
+import com.mastfrog.util.preconditions.Exceptions;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -23,7 +23,7 @@
  */
 package com.mastfrog.selenium;
 
-import static com.mastfrog.util.Checks.notNull;
+import static com.mastfrog.util.preconditions.Checks.notNull;
 import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;

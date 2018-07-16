@@ -24,7 +24,7 @@
 
 package com.mastfrog.testmain.suites;
 
-import com.mastfrog.util.Streams;
+import com.mastfrog.util.streams.Streams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
