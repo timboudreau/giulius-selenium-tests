@@ -1,6 +1,6 @@
 package com.mastfrog.testmain.suites;
 
-import com.mastfrog.util.service.AbstractSingleAnnotationLineOrientedRegistrationAnnotationProcessor;
+import com.mastfrog.annotation.registries.AbstractSingleAnnotationLineOrientedRegistrationAnnotationProcessor;
 import com.mastfrog.util.service.ServiceProvider;
 import java.util.Collections;
 import java.util.Set;
