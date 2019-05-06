@@ -134,7 +134,10 @@
             </plugin>
         </plugins>
     </build>
-    <url>https://github.com/timboudreau/giulius-selenium-tests</url>
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/timboudreau/giulius-selenium-tests/issues</url>
+    </issueManagement>
     <scm>
         <url>https://github.com/timboudreau/giulius-selenium-tests</url>
         <connection>scm:git:https://github.com/timboudreau/giulius-selenium-tests.git</connection>
