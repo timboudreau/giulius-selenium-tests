@@ -1,9 +1,8 @@
 package com.mastfrog.testmain.suites;
 
-import com.mastfrog.annotation.registries.AbstractSingleAnnotationLineOrientedRegistrationAnnotationProcessor;
+import com.mastfrog.annotation.AnnotationUtils;
+import com.mastfrog.annotation.registries.AbstractLineOrientedRegistrationAnnotationProcessor;
 import com.mastfrog.util.service.ServiceProvider;
-import java.util.Collections;
-import java.util.Set;
 import java.util.regex.Pattern;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -20,23 +19,14 @@ import javax.tools.Diagnostic;
  */
 @ServiceProvider(Processor.class)
 @SupportedAnnotationTypes({"com.mastfrog.testmain.suites.Suites"})
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
-public class SuitesProcessor extends AbstractSingleAnnotationLineOrientedRegistrationAnnotationProcessor {
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
+public class SuitesProcessor extends AbstractLineOrientedRegistrationAnnotationProcessor  {
 
     private static final Pattern whitespace = Pattern.compile("\\s");
     private int ix;
 
-    public SuitesProcessor() {
-        super(Suites.class);
-    }
-
     @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        return Collections.singleton(Suites.class.getName());
-    }
-
-    @Override
-    protected void handleOne(Element el, AnnotationMirror anno, int order) {
+    protected void handleOne(Element el, AnnotationMirror anno, int order, AnnotationUtils utils) {
         TypeElement te = (TypeElement) el;
         Suites suites = te.getAnnotation(Suites.class);
         for (String suiteName : suites.value()) {
