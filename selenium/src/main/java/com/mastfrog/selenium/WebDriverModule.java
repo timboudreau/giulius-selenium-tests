@@ -40,6 +40,7 @@ import static com.mastfrog.util.collections.CollectionUtils.setOf;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -127,7 +128,7 @@ final class WebDriverModule extends AbstractModule {
 
         @Override
         public WebDriverWait get() {
-            return new WebDriverWait(driver.get(), waitDurationSeconds);
+            return new WebDriverWait(driver.get(), Duration.ofSeconds(waitDurationSeconds));
         }
     }
 

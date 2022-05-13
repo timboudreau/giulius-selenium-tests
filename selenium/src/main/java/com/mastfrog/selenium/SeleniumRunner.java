@@ -44,6 +44,7 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import javax.imageio.ImageIO;
@@ -410,7 +411,7 @@ public final class SeleniumRunner extends GuiceRunner {
         }
         if (!cap.waitForVisible().id().equals("body")) {
             WebElement el = driver.findElement(new FindByBuilder().buildIt(cap.waitForVisible(), null));
-            WebDriverWait wait = new WebDriverWait(driver, 5, 10);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5), Duration.ofMillis(10));
             try {
                 wait.ignoring(TimeoutException.class).until(ExpectedConditions.visibilityOf(el));
             } catch (Exception e) {
