@@ -25,7 +25,6 @@ package com.mastfrog.video;
 
 import com.google.inject.AbstractModule;
 import com.mastfrog.giulius.Dependencies;
-import com.mastfrog.giulius.annotations.Namespace;
 import com.mastfrog.settings.Settings;
 import com.mastfrog.settings.SettingsBuilder;
 import java.io.IOException;
@@ -49,7 +48,7 @@ public class VideoModule extends AbstractModule {
                 .addDefaultLocations()
                 .parseCommandLineArguments(args).build();
         Dependencies deps = Dependencies.builder()
-                .add(settings, Namespace.DEFAULT)
+                .add(settings, "defaults")
                 .add(new VideoModule())
                 .build();
 

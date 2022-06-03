@@ -2,16 +2,14 @@
 open module com.mastfrog.video {
     exports com.mastfrog.video;
 
-    requires com.google.guice;
-    requires static com.mastfrog.giulius.annotations;
     // Sibling com.mastfrog/giulius-3.0.0-dev
 
     // Transitive detected by source scan
     requires com.mastfrog.giulius;
-    requires com.mastfrog.giulius.settings;
 
     // Sibling com.mastfrog/giulius-tests-3.0.0-dev
     requires com.mastfrog.giulius.tests;
+    requires com.mastfrog.giulius.settings;
 
     // Inferred from source scan
 
@@ -19,4 +17,6 @@ open module com.mastfrog.video {
     requires com.mastfrog.time;
     requires java.logging;
 
+    // Inferred from test-source-scan
+    requires junit;
 }

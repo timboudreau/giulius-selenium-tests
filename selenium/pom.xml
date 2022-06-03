@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <project
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -90,7 +90,7 @@
             <groupId>com.assertthat</groupId>
             <artifactId>selenium-shutterbug</artifactId>
         </dependency>
-<!-- HtmlUnit drags in old incompatible versions which
+        <!-- HtmlUnit drags in old incompatible versions which
              have security warnings, so replace them with compatible versions
         -->
         <dependency>
@@ -131,6 +131,19 @@
                     <perCoreThreadCount>1</perCoreThreadCount>
                     <threadCount>1</threadCount>
                     <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.auto.service</groupId>
+                            <artifactId>auto-service</artifactId>
+                            <version>1.0.1</version>
+                        </path>
+                    </annotationProcessorPaths>                    
                 </configuration>
             </plugin>
         </plugins>
