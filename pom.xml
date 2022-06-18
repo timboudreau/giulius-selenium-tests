@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+<project
+     xmlns="http://maven.apache.org/POM/4.0.0"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>giulius-selenium-parent</artifactId>
+
     <url>https://github.com/timboudreau/giulius-selenium-tests</url>
+
     <parent>
         <groupId>com.mastfrog</groupId>
         <artifactId>mastfrog-parent</artifactId>
-        <version>2.8.1</version>
+        <version>2.8.2</version>
         <relativePath/>
     </parent>
+
     <name>Giulius Selenium Parent</name>
     <description>Guice-enhanced Selenium tests via JUnit</description>
     <packaging>pom</packaging>
@@ -17,24 +24,29 @@
         <module>selenium</module>
         <module>video</module>
         <module>test-main</module>
+
         <!-- comment this out due to JDK 8 javac bug -->
-        <!--
-        <module>groovy-selenium-guice-demo</module>
--->
+<!--
+            <module>groovy-selenium-guice-demo</module>
+        -->
+
     </modules>
     <issueManagement>
         <system>Github</system>
         <url>https://github.com/timboudreau/giulius-selenium-tests/issues</url>
     </issueManagement>
+
     <scm>
         <url>https://github.com/timboudreau/giulius-selenium-tests.git</url>
         <connection>scm:git:https://github.com/timboudreau/giulius-selenium-tests.git</connection>
         <developerConnection>git@github.com/timboudreau/giulius-selenium-tests.git</developerConnection>
     </scm>
+
     <organization>
         <name>Mastfrog Technologies</name>
         <url>https://mastfrog.com</url>
     </organization>
+
     <licenses>
         <license>
             <name>MIT</name>
@@ -42,6 +54,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
     <developers>
         <developer>
             <name>Tim Boudreau</name>
@@ -49,4 +62,6 @@
             <url>https://timboudreau.com</url>
         </developer>
     </developers>
+
 </project>
+
