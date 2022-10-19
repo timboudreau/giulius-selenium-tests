@@ -24,8 +24,8 @@
 package com.mastfrog.video;
 
 import com.google.inject.Inject;
-import com.mastfrog.giulius.ShutdownHookRegistry;
 import com.mastfrog.settings.Settings;
+import com.mastfrog.shutdown.hooks.ShutdownHookRegistry;
 import com.mastfrog.util.time.TimeUtil;
 import static com.mastfrog.video.VideoModule.log;
 import java.io.File;
