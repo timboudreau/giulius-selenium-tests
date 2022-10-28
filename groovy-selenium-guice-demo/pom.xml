@@ -155,10 +155,6 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>giulius-tests</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>test-main</artifactId>
         </dependency>
         <dependency>
@@ -174,27 +170,10 @@
             <artifactId>video</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-chrome-driver</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-firefox-driver</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-support</artifactId>
-        </dependency>
-
-    </dependencies>
+        </dependencies>
     <name>groovy-selenium-guice-demo</name>
     <issueManagement>
         <system>Github</system>

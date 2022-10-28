@@ -26,10 +26,6 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>giulius</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>giulius-tests</artifactId>
         </dependency>
         <dependency>
@@ -42,11 +38,6 @@
             <artifactId>giulius-annotation-processors</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-
         <dependency>
 
             <groupId>org.seleniumhq.selenium</groupId>
