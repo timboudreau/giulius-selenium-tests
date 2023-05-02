@@ -24,8 +24,8 @@
 package com.mastfrog.video;
 
 import com.mastfrog.giulius.tests.GuiceRunner;
-import com.mastfrog.giulius.tests.TestWith;
-import java.io.File;
+import com.mastfrog.giulius.tests.anno.TestWith;
+
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;

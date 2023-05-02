@@ -1,7 +1,7 @@
 package com.mastfrog.selenium;
 
 import com.google.inject.Inject;
-import com.mastfrog.giulius.tests.TestWith;
+import com.mastfrog.giulius.tests.anno.TestWith;
 import com.mastfrog.giulius.annotations.Defaults;
 import com.mastfrog.selenium.TestSeleniumTest.FixtureOne;
 import org.junit.Test;
