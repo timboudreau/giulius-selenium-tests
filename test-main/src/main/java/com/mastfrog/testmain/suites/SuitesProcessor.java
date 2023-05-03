@@ -19,7 +19,7 @@ import javax.tools.Diagnostic;
  */
 @ServiceProvider(Processor.class)
 @SupportedAnnotationTypes({"com.mastfrog.testmain.suites.Suites"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class SuitesProcessor extends AbstractLineOrientedRegistrationAnnotationProcessor  {
 
     private static final Pattern whitespace = Pattern.compile("\\s");
